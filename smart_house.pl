@@ -1,16 +1,11 @@
 % Eficientizacion de recursos.
 
-% Tipos de dispositivos
-tipo_disp(refrigeracion).
-tipo_disp(limpieza).
-tipo_disp(entretenimiento).
-
-% Tipos de lugares/habitaciones
-tipo_hab(cocina).
-tipo_hab(dormitorio).
-tipo_hab(sala).
-tipo_hab(patio).
-tipo_hab(marquesina).
+% hechos dinamicos
+:-dynamic dispositivo/1.
+:-dynamic lugar/1.
+:-dynamic dispositivo_lugar/2.
+:-dynamic consumo/2.
+:-dynamic ubicacion/2.
 
 % Definicion de hecho dispositivo para decir los que existen en diferentes lugares de la casa
 
@@ -20,70 +15,51 @@ pregunta(X, Respuesta):- ver_pregunta(X), read(Respuesta).
 resp_disp(si, X):- !, assertz(dispositivos(X)).
 resp_disp(no, _):- !, write('No se acepta ese dispositivo en esa habitacion.'), fail.
 
-tipos(tipo_hab(X)).
-tipos(tipo_disp(X)).
+agregar_dispositivo(X):- \+ (dispositivo(X)), assertz(dispositivo(X)).
+agregar_lugar(X):- \+ (lugar(X)), assertz(lugar(X)).
+agregar_disp_lugar(Disp, Lugar):- dispositivo(Disp), lugar(Lugar),
+                        \+ (dispositivo_lugar(Disp, Lugar)), assertz(dispositivo_lugar(Disp, Lugar)).
 
-:-dynamic dispositivos/1.
-agregar_dispositivo(Disp):- tipos(Disp), 
-
-% Definicion de hecho lugar para decir los lugares que existen en la casa
+% Definicion de hecho lugar para decir los lugares que existen en la casa en caso que no se 
+% inserte uno por uno
 % Prototipo: lugar(<lugar>).
-lugar(sala_estar).
-lugar(cocina).
-lugar(terraza).
-lugar(marquesina).
-lugar(habitacionX).
-lugar(escalera).
-lugar(garage).
-lugar(baño_habitacionX).
-lugar(patio).
-lugar(quiosco).
-
-% Definicion de hecho tiene para decir que dispositivo tiene cada lugar
-% Prototipo: tiene(<lugar>, <dispositivo>).
-tiene(cocina, lavaplatos).
-tiene(cocina, microondas).
-tiene(cocina, cafetera).
-tiene(cocina, refrigerador).
-tiene(cocina, luz).
-tiene(baño_habitacionX, toilet).
-tiene(baño_habitacionX, ducha).
-tiene(baño_habitacionX, jacuzzi).
-tiene(baño_habitacionX, luz).
-tiene(habitacionX, aire_acondicionado).
-tiene(habitacionX, calefaccion).
-tiene(habitacionX, computador).
-tiene(habitacionX, television).
-tiene(habitacionX, radio).
-tiene(habitacionX, luz).
+% lugar(sala_estar).
+% lugar(cocina).
+% lugar(terraza).
+% lugar(marquesina).
+% lugar(habitacionX).
+% lugar(escalera).
+% lugar(garage).
+% lugar(baño_habitacionX).
+% lugar(patio).
+% lugar(quiosco).
 
 % Definicion de acciones que tienen los dispositivos
 % Prototipo: accion(<dispositivo>, <accion>).
-accion(luz, power).
-accion(aire_acondicionado, power).
-accion(aire_acondicionado, subir_temp).
-accion(aire_acondicionado, bajar_temp).
-accion(television, power).
-accion(television, subir_vol).
-accion(television, bajar_vol).
-accion(television, subir_canal).
-accion(television, bajar_canal).
-accion(radio, subir_vol).
-accion(radio, bajar_vol).
-accion(microondas, power).
-accion(microondas, set_timer('tiempo')).
-accion(microondas, iniciar).
+% accion(luz, power).
+% accion(aire_acondicionado, power).
+% accion(aire_acondicionado, subir_temp).
+% accion(aire_acondicionado, bajar_temp).
+% accion(television, power).
+% accion(television, subir_vol).
+% accion(television, bajar_vol).
+% accion(television, subir_canal).
+% accion(television, bajar_canal).
+% accion(radio, subir_vol).
+% accion(radio, bajar_vol).
+% accion(microondas, power).
+% accion(microondas, set_timer('tiempo')).
+% accion(microondas, iniciar).
 
 % Definicion de funciones especificas para algunos dispositivos especiales
 % No hay prototipo porque podrian ser unicas todas
 
-set_timer(X):- number(X).
+% set_timer(X):- number(X).
 
 % Para poder verificar el uso/consumo de algun dispositivo se necesita un hecho dinamico
 % Prototipo dinamico: consumo(<cantidad>, <dispositivo>).
-:-dynamic consumo/2.
 
-insertar_consumo(Consumo, Dispositivo):- retract(consumo(_, Dispositivo)), assertz(consumo(Consumo, Dispositivo)).
+insertar_consumo(Consumo, Dispositivo):- dispositivo(Dispositivo), retract(consumo(_, Dispositivo)), assertz(consumo(Consumo, Dispositivo)).
 
 % Para tomar acciones en base a consumo se usaran las siguientes reglas
 % ---
@@ -97,6 +73,5 @@ insertar_consumo(Consumo, Dispositivo):- retract(consumo(_, Dispositivo)), asser
 
 % Para poder trackear la ubicacion de una persona se utilizara un hecho dinamico.
 % Prototipo dinamico: ubicacion(<persona>, <lugar>).
-:-dynamic ubicacion/2.
 
-insertar_ubicacion(Persona, Lugar):- retract(ubicacion(Persona, _)), assertz(ubicacion(Persona, Lugar)).
+insertar_ubicacion(Persona, Lugar):- lugar(Lugar), retract(ubicacion(Persona, _)), assertz(ubicacion(Persona, Lugar)).
