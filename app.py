@@ -65,61 +65,77 @@ def clearInput():
     dispEntry.delete(0, END)
     lugarEntry.delete(0, END)
 
+def secondWindow():
+    second = Toplevel()
+    second.geometry('640x480')
+    label = Label(second, text='Ejemplo').pack()
+
 # create window object and give it a title
 app = Tk()
 app.title('Smart House')
+app.iconbitmap('D:/Projects/Django-Python/Prolog/house.ico')
+
+# add background image
+# C = Canvas(top, bg="blue", height=250, width=300)
+bgimg = PhotoImage(file = "D:/Projects/Django-Python/Prolog/background.png")
+bg_label = Label(app, image=bgimg)
+bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 # resize default size
 app.geometry('800x400')
 
 # consult field and label
-consultLabel = Label(app, text='Consulta:', font=('bold', 14), pady=15, padx=3)
+consultLabel = Label(app, text='Consulta:', font=('bold', 14), bg="black", fg="white")
 consultLabel.grid(row=0, column=0)
 consultInput = StringVar()
 consultEntry = Entry(app, textvariable=consultInput)
 consultEntry.grid(row=0, column=1)
 
 # consult button
-consultBtn = Button(app, text='Consultar', command=realizarConsulta, pady=5)
+consultBtn = Button(app, text='Consultar', command=realizarConsulta, pady=3)
 consultBtn.grid(row=1, column = 0)
 
 # agregar_dispositivo field and label
-dispLabel = Label(app, text='Dispositivo:', font=('bold', 14), pady=15, padx=3)
+dispLabel = Label(app, text='Dispositivo:', font=('bold', 14), bg="black", fg="white")
 dispLabel.grid(row=0, column=2)
 dispInput = StringVar()
 dispEntry = Entry(app, textvariable=dispInput)
 dispEntry.grid(row=0, column=3)
 
 # agregar_dispositivo button
-dispBtn = Button(app, text='Agregar Dispositivo', command=agregarDispositivo, pady=5)
-dispBtn.grid(row=1, column = 2)
+dispBtn = Button(app, text='Agregar Dispositivo', command=agregarDispositivo)
+dispBtn.grid(row=1, column = 2, pady=10)
 
 # agregar_lugar field and label
-lugarLabel = Label(app, text='Lugar:', font=('bold', 14), pady=15, padx=3)
+lugarLabel = Label(app, text='Lugar:', font=('bold', 14), bg="black", fg="white")
 lugarLabel.grid(row=0, column=4)
 lugarInput = StringVar()
 lugarEntry = Entry(app, textvariable=lugarInput)
 lugarEntry.grid(row=0, column=5)
 
 # agregar_lugar button
-lugarBtn = Button(app, text='Agregar Lugar', command=agregarLugar, pady=5)
-lugarBtn.grid(row=1, column = 4)
+lugarBtn = Button(app, text='Agregar Lugar', command=agregarLugar)
+lugarBtn.grid(row=1, column = 4, pady=10)
 
 # agregar_disp_lugar button
-dispLugarBtn = Button(app, text='Agregar Disp. a Lugar', command=agregarDispLugar, pady=5)
-dispLugarBtn.grid(row=1, column = 6)
+dispLugarBtn = Button(app, text='Agregar Disp. a Lugar', command=agregarDispLugar)
+dispLugarBtn.grid(row=1, column = 6, pady=10)
 
 # list to show results
-lista = Listbox(app, height=10, width=100)
-lista.grid(row=3, column=1, columnspan=6, rowspan=10)
+lista = Listbox(app, height=8, width=100, setgrid=0)
+lista.grid(row=2, column=1, columnspan=6, rowspan=8, pady=25)
 
 # Scrollbar for the list
 scrollbar = Scrollbar(app)
-scrollbar.grid(row=3, column=7)
+scrollbar.grid(row=2, column=6, pady=25)
 
 # Set scrollbar a la lista
 lista.configure(yscrollcommand=scrollbar.set)
 scrollbar.configure(command=lista.yview)
+
+# second window button
+secondWinBtn = Button(app, text='Abrir otra ventana', command=secondWindow, pady=5)
+secondWinBtn.grid(row=13, column = 3)
 
 # run app
 app.mainloop()

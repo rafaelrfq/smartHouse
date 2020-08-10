@@ -18,30 +18,9 @@ resp_disp(si, X):- !, assertz(dispositivos(X)).
 resp_disp(no, _):- !, write('No se acepta ese dispositivo en esa habitacion.'), fail.
 
 agregar_dispositivo(X):- \+ (dispositivo(X)), assertz(dispositivo(X)).
-% agregar_lugar(X):- \+ (lugar(X)), assertz(lugar(X)).
-% agregar_disp_lugar(Disp, Lugar):- dispositivo(Disp), lugar(Lugar),
-%                         \+ (dispositivo_lugar(Disp, Lugar)), assertz(dispositivo_lugar(Disp, Lugar)).
-
-add_tail([],X,[X]).
-add_tail([H|T],X,[H|L]):-add_tail(T,X,L).
-
-agregar_lugar(Lugar,Tipo):-
-    tipo(Tipo),
-    retractall(lugar(Lugar,,)),
-    assertz(lugar(Lugar, Tipo, [])).
-
-agregar_disp_lugar(Disp, Lugar):-
-    lugar(Lugar,T,L),
-    add_tail(L,Disp, Lista),
-    retract(lugar(Lugar,,)),
-    asserta(lugar(Lugar,T,Lista)).
-
-
-tipo(habitacion).
-tipo(sala).
-tipo(exterior).
-tipo(cocina).
-tipo(comedor).
+agregar_lugar(X):- \+ (lugar(X)), assertz(lugar(X)).
+agregar_disp_lugar(Disp, Lugar):- dispositivo(Disp), lugar(Lugar),
+                        \+ (dispositivo_lugar(Disp, Lugar)), assertz(dispositivo_lugar(Disp, Lugar)).
 
 % Definicion de hecho lugar para decir los lugares que existen en la casa en caso que no se 
 % inserte uno por uno
