@@ -69,6 +69,7 @@ def secondWindow():
     second = Toplevel()
     second.geometry('640x480')
     label = Label(second, text='Ejemplo').pack()
+    contenido = Label(second, text='Aqui se pondra lo de insertar datos de sensores y eso').pack()
 
 # create window object and give it a title
 app = Tk()
@@ -134,7 +135,7 @@ lista.configure(yscrollcommand=scrollbar.set)
 scrollbar.configure(command=lista.yview)
 
 # second window button
-secondWinBtn = Button(app, text='Abrir otra ventana', command=secondWindow, pady=5)
+secondWinBtn = Button(app, text='Inputs y Sensores', command=secondWindow, pady=5)
 secondWinBtn.grid(row=13, column = 3)
 
 # run app

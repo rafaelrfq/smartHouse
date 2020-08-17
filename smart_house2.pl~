@@ -174,7 +174,7 @@ abertura(ventana).
 abertura(garaje).
 
 
-% Definición de estados que tienen las aberturas
+% Definición de estados que tienen las aberturas 
 % Prototipo: accion(<abertura>, <accion>).
 
 accion(puerta,bloqueada).
@@ -200,15 +200,15 @@ entrada(garaje, garaje).
 
 %definicion de acciones de bloqueos para todas las aberturas de la casa
 
-bloquear(X):- accion(abertura(X),bloqueada).
-bloquear(X):- ubicacion(persona(X),habitacionX), accion(abertura(X),bloqueada).
+bloquear:- accion(abertura(X),bloqueada).
+bloquear:- ubicacion(persona(X),habitacionX), accion(abertura(X),bloqueada). 
 
-desbloquear(X):- accion(abertura(X),desbloqueada).
-desbloquear(Result):- verEstadoCasa(Result), Result = vacia, setAlarma(on);
-	      abrirComponenteCasa.
-habilitarSeg(Result):- verEstadoCasa(Result), Result = vacia, setAlarma(on).
+desbloquear:- accion(abertura(X),desbloqueada).
+habilitarSeg:- verEstadoCasa(result), result = vacia, setAlarma(on).
+desbloquear:- verEstadoCasa(result), result = vacia, setAlarma(on);
+	      abrirComponenteCasa.	
 
-setLucesDelPatio(Result):- verEstadoCasa(Result), Result = noche, accion(luz,power).
-clima(Result):- verEstadoCasa(Result), Result = vacia. % accion(aire_acondicionado, subir_temp).
-bloquearGaraje():- accion(garaje,bloqueada).
-desbloquearGaraje():- accion(garaje,bloqueada).
+setLucesDelPatio:- verEstadoCasa(result), result = noche, accion(luz,power).
+clima:- verEstadoCasa(result), result = vacia. % accion(aire_acondicionado, subir_temp).
+bloquearGaraje:- accion(garaje,bloqueada).
+desbloquearGaraje:- accion(garaje,bloqueada).
