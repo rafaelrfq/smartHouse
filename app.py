@@ -4,9 +4,6 @@ from tkinter import messagebox
 prolog = Prolog()
 prolog.consult("smart_house.pl")
 
-# for value in prolog.query("shirt(X)"):
-#     print(value["X"])
-
 # Objects that will be shown in the list
 objetosLista = []
 
@@ -71,19 +68,62 @@ def secondWindow():
     label = Label(second, text='Ejemplo').pack()
     contenido = Label(second, text='Aqui se pondra lo de insertar datos de sensores y eso').pack()
 
+def bloquearODesbloquear():
+    global stateOfTheHouse
+    global ThirdWinBtn
+    if stateOfTheHouse == 'Bloquear':
+        stateOfTheHouse = 'Desbloquear'
+        ThirdWinBtn.configure(text="bloquear Sistema")
+        print(list(prolog.query("desbloquear.")))
+        res = list(prolog.query("abertura(X), accion(X,Y)."))
+        printListUnlock(res)
+    else:
+        stateOfTheHouse = 'Bloquear'
+        ThirdWinBtn.configure(text="Desbloquear Sistema")
+        print(list(prolog.query("bloquear.")))
+        res = list(prolog.query("abertura(X), accion(X,Y)."))
+        printListUnlock(res)
+
+def printListUnlock(resultado):
+    for ob in resultado:
+        objetosLista.append(str(ob['X'] +':'+ob['Y']))
+    clearInput()
+    popularLista()
+
+def EstadoCasa():
+    if estInput.get() == '':
+        messagebox.showerror('Campos Requeridos','Debe introducir un estado los campos')
+    else:
+        print(list(prolog.query("setEstadoCasa(%s)" % (estInput.get()))))
+        resultado = list(prolog.query("verEstadoCasa(X)."))
+        for ob in resultado:
+            objetosLista.append(str('Estado: '+ ob['X']))
+        clearInput()
+        popularLista()
+
+def luces():
+    global fifthWinBtn
+    state = list(prolog.query("verEstadoCasa(X)."))
+    prolog.query("setLucesDelPatio.")
+    if len(state) and state[0]['X'] == "noche":
+        messagebox.showinfo('Exito','Las luces están prendidas')
+    else:
+        messagebox.showerror('Denegado','No se puede, el estado de la casa debe ser noche')
+
 # create window object and give it a title
 app = Tk()
 app.title('Smart House')
-app.iconbitmap('D:/Projects/Django-Python/Prolog/house.ico')
+app.iconbitmap('./house.ico')
+stateOfTheHouse = 'Desbloquear'
 
 # add background image
 # C = Canvas(top, bg="blue", height=250, width=300)
-bgimg = PhotoImage(file = "D:/Projects/Django-Python/Prolog/background.png")
+bgimg = PhotoImage(file = "./background.png")
 bg_label = Label(app, image=bgimg)
 bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 # resize default size
-app.geometry('800x400')
+app.geometry('960x540')
 
 # consult field and label
 consultLabel = Label(app, text='Consulta:', font=('bold', 14), bg="black", fg="white")
@@ -137,6 +177,24 @@ scrollbar.configure(command=lista.yview)
 # second window button
 secondWinBtn = Button(app, text='Inputs y Sensores', command=secondWindow, pady=5)
 secondWinBtn.grid(row=13, column = 3)
+
+# ventana de bloquear sistema
+ThirdWinBtn = Button(app, text="Bloquear Sistema", command=bloquearODesbloquear, pady=5)
+ThirdWinBtn.grid(row=13, column = 4)
+
+# estado de la casa  field and label
+estLabel = Label(app, text='Estado de la casa:', font=('bold', 14), bg="black", fg="white")
+estLabel.grid(row=16, column=1)
+estInput = StringVar()
+estEntry = Entry(app, textvariable=estInput)
+estEntry.grid(row=16, column=2)
+
+# agregar_estado casa button
+fourthBtn = Button(app, text='Modificar estado', command=EstadoCasa)
+fourthBtn.grid(row=16, column = 4)
+
+fifthWinBtn = Button(app, text="Activar luces", command=luces, pady=5)
+fifthWinBtn.grid(row=17, column = 4)
 
 # run app
 app.mainloop()
