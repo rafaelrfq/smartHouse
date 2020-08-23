@@ -233,14 +233,14 @@ abertura(garaje).
 
 
 % Definición de estados que tienen las aberturas
-% Prototipo: accion(<abertura>, <accion>).
+% Prototipo: accion(<dispositivo>, <accion 0 [locked] / 1 [unlocked]>, <descripcion>).
 
-accion(puerta,bloqueada).
-accion(puerta,desbloqueada).
-accion(ventana,bloqueada).
-accion(ventana,desbloqueada).
-accion(garaje,bloqueada).
-accion(garaje,desbloqueada).
+accion(puerta,0,'Bloqueada').
+accion(puerta,1,'Desbloqueada').
+accion(ventana,0,'Bloqueada').
+accion(ventana,1,'Desbloqueada').
+accion(garaje,0,'Bloqueada').
+accion(garaje,1,'Desbloqueada').
 
 
 % Definicion de entradas que tiene un lugar
@@ -258,17 +258,12 @@ entrada(garaje, garaje).
 
 %definicion de acciones de bloqueos para todas las aberturas de la casa
 
-bloquear:- abertura(X), retractall(accion(X,_)),assertz(accion(X,bloqueada));
-              writeln("Bloqueado").
+bloquear:- abertura(X), retractall(accion(X,_,_)),assertz(accion(X,0,'Bloqueada')).
 
-desbloquear:- abertura(X),retractall(accion(X,_)),assertz(accion(X,desbloqueada));
-                 writeln("Desbloqueado").
+desbloquear:- abertura(X),retractall(accion(X,_,_)),assertz(accion(X,1,'Desbloqueada'))
 
 habilitarSeg(Result):- verEstadoCasa(Result), Result = vacia, setAlarma(on).
 
 setEstadoCasa(Estado):- retractall(verEstadoCasa(_)),assert(verEstadoCasa(Estado)).
 
 setLucesDelPatio:- verEstadoCasa(X), X = noche, retractall(opcion(luz,_)), assert(opcion(luz,power)).
-
-bloquearGaraje():- accion(garaje,bloqueada),!.
-desbloquearGaraje():- accion(garaje,bloqueada),!.
