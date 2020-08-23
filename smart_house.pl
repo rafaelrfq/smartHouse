@@ -88,6 +88,11 @@ verificar_consumo(alto, Dispositivo, Lugar, Resultado):-
 %                       Reglas para el manejo de la casa
 % ========================================================================
 
+%regla para agregar un area en la casa
+agregar_lugar(Lugar,Tipo):-
+    tipo(Tipo),
+    retractall(lugar(Lugar,_,_)),
+    assertz(lugar(Lugar, Tipo, [])).
 
 %Primera instancia de presencia de alguien
 %en la casa.
