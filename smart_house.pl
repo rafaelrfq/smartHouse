@@ -9,6 +9,9 @@
 %-Agregar el tiempo
 %-Agregar temperatura a los lugares
 %-Recordar el buen uso de las estructuras para los hechos
+%-Primero usar irLugar para integrar a una persona a la casa
+%-Luego usar cambioLugar para el desplazamiento de esa
+%-persona hacia otras areas de la casa
 
 % hechos dinamicos
 :-dynamic consumo/2. %(valor de consumo, dispositivo)
