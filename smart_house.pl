@@ -113,10 +113,10 @@ eliminar_disp(Disp, Lugar):-
 
 %desactivar dispositivos del lugar donde se encontraba una persona
 %si y solo si no hay nadie mas en ese lugar.
-desactivar_dispotivos(Persona):-
+desactivar_dispositivos(Persona):-
     ubicacion(Persona,Lugar), setof(Otros, ubicacion(Otros,Lugar), ListaP),
     length(ListaP, Cant), Cant > 1,!.
-desactivar_dispotivos(Persona):-
+desactivar_dispositivos(Persona):-
     ubicacion(Persona,Lugar), setof(Otros, ubicacion(Otros,Lugar), ListaP),
     length(ListaP, Cant), Cant =< 1, lugar(Lugar,_,Lista),
     desactivarTodos(Lugar, Lista).
