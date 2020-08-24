@@ -15,7 +15,7 @@
 
 % hechos dinamicos
 :-dynamic consumo/2. %(valor de consumo, dispositivo)
-:-dynamic estado/3.
+:-dynamic estado/3. %(idDispositivo, Lugar, estado)
 :-dynamic lugar/3. %(ID del lugar, Tipo, lista de dispositivos [(id dispositivo, tipo)])
 :-dynamic temperatura/2. %(ID del lugar, valor en celcius)
 :-dynamic tiempo/2. %(hora, minuto) basado en 24h
