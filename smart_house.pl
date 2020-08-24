@@ -202,11 +202,10 @@ getTime(Hour, Min):-
     tiempo(Hour,Min).
 
 getDispositivosEnUso(Id, 'Apagado', Descr):-
-    accion(Id,State,Descr), State is 0,!.
+    accion(Id,State,Descr), State is 0.
 getDispositivosEnUso(Id, 'Encendido', Descr):-
-    accion(Id,State,Descr), State is 1,!.
-getDispositivosEnUso(Id, 'Error', 'Revisar Dispositivo'):-
-    accion(Id,_,_).
+    accion(Id,State,Descr), State is 1.
+
 
 
 % ========================================================================
