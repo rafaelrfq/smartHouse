@@ -64,10 +64,10 @@ insertar_consumo(Consumo, Dispositivo, Lugar, Resultado):-
 
 verificar_consumo(regular, _, _, Resultado):- Resultado = 'Se mantiene el mismo estado en el dispositivo', !.
 verificar_consumo(alto, Dispositivo, Lugar, Resultado):-
-    retract(estado(Dispositivo, Lugar, _)), assertz(estado(Dispositivo, Lugar, 0)),
+    retract(accion(Dispositivo,_,_)), assertz(accion(Dispositivo, 0, 'Desactivado')),
     Resultado = 'Se apago el dispositivo para eficientizar los recursos.'.
 verificar_consumo(alto, Dispositivo, Lugar, Resultado):-
-    assertz(estado(Dispositivo, Lugar, 0)),
+    assertz(accion(Dispositivo, 0, 'Desactivado')),
     Resultado = 'Se apago el dispositivo para eficientizar los recursos.'.
 
 % ========================================================================
@@ -87,7 +87,7 @@ irLugar(Persona, Lugar):-
 
 %Regla que se utiliza para cuando una persona se desplaza dentro de la casa.
 cambioLugar(Persona, Lugar):-
-    desactivar_dispotivos(Persona),
+    desactivar_dispositivos(Persona),
     lugar(Lugar,_,_), retract(ubicacion(Persona, _)),
     asserta(ubicacion(Persona, Lugar)), usarDispositivos(Lugar,25,29,19,24,0,17,0),!.
 cambioLugar(Persona, Lugar):-
@@ -221,11 +221,8 @@ abertura(garaje).
 % Prototipo: accion(<dispositivo>, <accion 0 [locked] / 1 [unlocked]>, <descripcion>).
 
 accion(puerta,0,'Bloqueada').
-accion(puerta,1,'Desbloqueada').
 accion(ventana,0,'Bloqueada').
-accion(ventana,1,'Desbloqueada').
 accion(garaje,0,'Bloqueada').
-accion(garaje,1,'Desbloqueada').
 
 
 % Definicion de entradas que tiene un lugar

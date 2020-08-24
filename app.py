@@ -100,18 +100,7 @@ def desactivarDispositivo():
         messagebox.showerror('Campos Requeridos','Debe introducir una persona en el campo.')
     else:
         print(list(prolog.query("desactivar_dispositivos(%s)" % dispDesactivarInput.get())))
-        resultado = list(prolog.query("accion(Dispositivo, X, Estado)."))
-        for ob in resultado:
-            objetosLista.append(ob)
-        clearInput()
-        popularLista()
-
-def desactivarTodos():
-    if desactivarTodosInput.get() == '':
-        messagebox.showerror('Campos Requeridos','Debe introducir un lugar en el campo.')
-    else:
-        print(list(prolog.query("desactivarTodos(%s, X)" % desactivarTodosInput.get())))
-        resultado = list(prolog.query("accion(Dispositivo, X, Estado)."))
+        resultado = list(prolog.query("accion(Dispositivo, Estado, Descripcion)."))
         for ob in resultado:
             objetosLista.append(ob)
         clearInput()
@@ -159,7 +148,7 @@ def encenderAC():
         messagebox.showerror('Campos Requeridos','Debe introducir un lugar y una temperatura en los campos.')
     else:
         print(list(prolog.query("encenderACManual(%s, %s)" % (lugarACInput.get(), tempACInput.get()))))
-        resultado = list(prolog.query("accion(Dispositivo, X, Estado)."))
+        resultado = list(prolog.query("accion(Dispositivo, Estado, Descripcion)."))
         for ob in resultado:
             objetosLista.append(ob)
         clearInput()
@@ -205,6 +194,17 @@ def dispEnUso():
     clearInput()
     popularLista()
 
+def insertarConsumo():
+    if lugarConsumoInput.get() == '' or dispConsumoInput.get() == '' or consumoInput.get() == '':
+        messagebox.showerror('Campos Requeridos','Debe introducir un lugar, dispositivo y consumo en los campos.')
+    else:
+        print(list(prolog.query("insertar_consumo(%s,%s,%s,Resultado)" % (consumoInput.get(), dispConsumoInput.get(), lugarConsumoInput.get()))))
+        resultado = list(prolog.query("consumo(Valor, Dispositivo)."))
+        for ob in resultado:
+            objetosLista.append(ob)
+        clearInput()
+        popularLista()
+
 def popularLista():
     lista.delete(0, END)
     for o in objetosLista:
@@ -221,12 +221,23 @@ def clearInput():
     lugarDEntry.delete(0, END)
     personaEntry.delete(0, END)
     lugarPEntry.delete(0, END)
+    dispDesactivarEntry.delete(0, END)
+    lugarLucesEntry.delete(0, END)
+    temperaturaEntry.delete(0, END)
+    personaEntry.delete(0, END)
+    tiempoEntry.delete(0, END)
+    lugarTEntry.delete(0, END)
+    consumoEntry.delete(0, END)
+    lugarConsumoEntry.delete(0, END)
+    dispConsumoEntry.delete(0, END)
+    lugarACEntry.delete(0, END)
+    tempACEntry.delete(0, END)
 
-def secondWindow():
-    second = Toplevel()
-    second.geometry('640x480')
-    label = Label(second, text='Ejemplo').pack()
-    contenido = Label(second, text='Aqui se pondra lo de insertar datos de sensores y eso').pack()
+# def secondWindow():
+#     second = Toplevel()
+#     second.geometry('640x480')
+#     label = Label(second, text='Ejemplo').pack()
+#     contenido = Label(second, text='Aqui se pondra lo de insertar datos de sensores y eso').pack()
 
 def bloquearODesbloquear():
     global stateOfTheHouse
@@ -374,17 +385,6 @@ dispDesactivarEntry.grid(row=3, column=3)
 dispDesactivarBtn = Button(app, text='Desactivar dispositivo', command=desactivarDispositivo)
 dispDesactivarBtn.grid(row=4, column = 2, pady=10)
 
-# desactivar_todos field and label
-desactivarTodosLabel = Label(app, text='Lugar:', font=('bold', 14), bg="black", fg="white")
-desactivarTodosLabel.grid(row=3, column=4)
-desactivarTodosInput = StringVar()
-desactivarTodosEntry = Entry(app, textvariable=desactivarTodosInput)
-desactivarTodosEntry.grid(row=3, column=5)
-
-# desactivar_todos button
-desactivarTodosBtn = Button(app, text='Desactivar disp. de lugar', command=desactivarTodos)
-desactivarTodosBtn.grid(row=4, column = 4, pady=10)
-
 # actualizar_temperatura field and label
 lugarTLabel = Label(app, text='Lugar:', font=('bold', 14), bg="black", fg="white")
 lugarTLabel.grid(row=6, column=0)
@@ -457,9 +457,32 @@ encenderLucesBtn.grid(row=10, column = 0, pady=10)
 apagarLucesBtn = Button(app, text='Apagar luces', command=apagarLuces)
 apagarLucesBtn.grid(row=10, column = 1, pady=10)
 
+# insertar_consumo field and label
+consumoLabel = Label(app, text='Consumo:', font=('bold', 14), bg="black", fg="white")
+consumoLabel.grid(row=9, column=2)
+consumoInput = StringVar()
+consumoEntry = Entry(app, textvariable=consumoInput)
+consumoEntry.grid(row=9, column=3)
+
+dispConsumoLabel = Label(app, text='Disp.(Consumo):', font=('bold', 14), bg="black", fg="white")
+dispConsumoLabel.grid(row=9, column=4)
+dispConsumoInput = StringVar()
+dispConsumoEntry = Entry(app, textvariable=dispConsumoInput)
+dispConsumoEntry.grid(row=9, column=5)
+
+lugarConsumoLabel = Label(app, text='Lugar(Consumo):', font=('bold', 14), bg="black", fg="white")
+lugarConsumoLabel.grid(row=10, column=2)
+lugarConsumoInput = StringVar()
+lugarConsumoEntry = Entry(app, textvariable=lugarConsumoInput)
+lugarConsumoEntry.grid(row=10, column=3)
+
+# insertar_consumo button
+consumoBtn = Button(app, text='Insertar Consumo', command=insertarConsumo)
+consumoBtn.grid(row=10, column = 4, pady=10)
+
 # getDispositivosEnUso button
-dispEnUsoBtn = Button(app, text='Listar Dispositivos En Uso', command=dispEnUso)
-dispEnUsoBtn.grid(row=9, column = 3, pady=10)
+dispEnUsoBtn = Button(app, text='Disp. En Uso', command=dispEnUso)
+dispEnUsoBtn.grid(row=9, column = 6, pady=10)
 
 # list to show results
 lista = Listbox(app, height=8, width=100, setgrid=0)
@@ -473,9 +496,9 @@ scrollbar.grid(row=12, column=5, pady=25)
 lista.configure(yscrollcommand=scrollbar.set)
 scrollbar.configure(command=lista.yview)
 
-# second window button
-secondWinBtn = Button(app, text='Inputs y Sensores', command=secondWindow, pady=5)
-secondWinBtn.grid(row=23, column = 3)
+# # second window button
+# secondWinBtn = Button(app, text='Inputs y Sensores', command=secondWindow, pady=5)
+# secondWinBtn.grid(row=23, column = 3)
 
 # ventana de bloquear sistema
 ThirdWinBtn = Button(app, text="Bloquear Sistema", command=bloquearODesbloquear, pady=5)
