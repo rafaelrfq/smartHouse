@@ -22,6 +22,8 @@
 :-dynamic consumo/2. %(valor de consumo, dispositivo)
 :-dynamic ubicacion/2. %(Persona, Lugar)
 :-dynamic accion/3. %(dispositivoID, estado (ON/OFF), accion)
+:-dynamic verEstadoCasa/1.
+:-dynamic alarma/1.
 
 %Tipo de areas posibles en la casa
 tipo(habitacion).
@@ -47,21 +49,6 @@ fuente(fosil).
 add_tail([],X,[X]).
 add_tail([H|T],X,[H|L]):-add_tail(T,X,L).
 
-
-% Definicion de hecho dispositivo para decir los que existen en diferentes lugares de la casa
-
-ver_pregunta(X):- write(X), write('(si/no)? ').
-pregunta(X, Respuesta):- ver_pregunta(X), read(Respuesta).
-
-% resp_disp(si, X):- !, assertz(dispositivos(X)).
-% resp_disp(no, _):- !, write('No se acepta ese dispositivo en esa
-% habitacion.'), fail.
-
-% Definicion de funciones especificas para algunos dispositivos especiales
-% No hay prototipo porque podrian ser unicas todas
-
-% set_timer(X):- number(X).
-
 % Para poder verificar el uso/consumo de algun dispositivo se necesita un hecho dinamico
 % Prototipo dinamico: consumo(<cantidad>, <dispositivo>).
 
@@ -83,16 +70,6 @@ verificar_consumo(alto, Dispositivo, Lugar, Resultado):-
     assertz(estado(Dispositivo, Lugar, 0)),
     Resultado = 'Se apago el dispositivo para eficientizar los recursos.'.
 
-% Para tomar acciones en base a consumo se usaran las siguientes reglas
-% ---
-
-% Para modificar temperatura interna se utilizara calefaccion y aire acondicionado
-% Se debe chequear si la temperatura esta por debajo de 20 grados celcius para prender la calefaccion
-% y si esta por encima de 26 para prender el aire acondicionado.
-
-% Para el control del agua se puede abrir o cerrar llaves y tambien enviar el consumo de esta a los usuarios
-% Verificar la cercania de los usuarios para cerrar automaticamente las llaves que se dejen abiertas
-
 % ========================================================================
 %                       Reglas para el manejo de la casa
 % ========================================================================
@@ -103,14 +80,12 @@ agregar_lugar(Lugar,Tipo):-
     retractall(lugar(Lugar,_,_)),
     assertz(lugar(Lugar, Tipo, [])).
 
-%Primera instancia de presencia de alguien
-%en la casa.
+%Primera instancia de presencia de alguien en la casa.
 irLugar(Persona, Lugar):-
     lugar(Lugar,_,_),
     asserta(ubicacion(Persona, Lugar)), usarDispositivos(Lugar,25,29,19,24,0,17,0).
 
-%Regla que se utiliza para cuando una persona se desplaza dentro
-%de la casa.
+%Regla que se utiliza para cuando una persona se desplaza dentro de la casa.
 cambioLugar(Persona, Lugar):-
     desactivar_dispotivos(Persona),
     lugar(Lugar,_,_), retract(ubicacion(Persona, _)),
@@ -119,10 +94,8 @@ cambioLugar(Persona, Lugar):-
     lugar(Lugar,_,_), retract(ubicacion(Persona, _)),
     asserta(ubicacion(Persona, Lugar)), usarDispositivos(Lugar,25,29,19,24,0,17,0).
 
-%regla para integrar dispositivos en un lugar
-%recordar usar la sintaxis de dispositivo apropiada
-%(idDispositivo, tipoDispositivo) 
-%tipoDispositivos implementados son:
+%regla para integrar dispositivos en un lugar recordar usar la sintaxis de dispositivo apropiada
+%(idDispositivo, tipoDispositivo) tipoDispositivos implementados son:
 %controlTemp, iluminacion
 agregar_disp(Disp, Lugar):-
     lugar(Lugar,T,L),
@@ -147,8 +120,7 @@ desactivar_dispotivos(Persona):-
     length(ListaP, Cant), Cant =< 1, lugar(Lugar,_,Lista),
     desactivarTodos(Lugar, Lista).
 
-%desactiva todos los dispositivos
-%del lugar seleccionado
+%desactiva todos los dispositivos del lugar seleccionado
 desactivarTodos(_,[]).
 desactivarTodos(Lugar,[Cabe|Cola]):-
     Cabe = (Dispositivo, _),
@@ -271,9 +243,11 @@ entrada(garaje, garaje).
 
 %definicion de acciones de bloqueos para todas las aberturas de la casa
 
+setAlarma(Valor):- retractall(alarma(_)), assertz(alarma(Valor)).
+
 bloquear:- abertura(X), retractall(accion(X,_,_)),assertz(accion(X,0,'Bloqueada')).
 
-desbloquear:- abertura(X),retractall(accion(X,_,_)),assertz(accion(X,1,'Desbloqueada'))
+desbloquear:- abertura(X),retractall(accion(X,_,_)),assertz(accion(X,1,'Desbloqueada')).
 
 habilitarSeg(Result):- verEstadoCasa(Result), Result = vacia, setAlarma(on).
 
