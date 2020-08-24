@@ -114,10 +114,14 @@ cambioLugar(Persona, Lugar):-
     asserta(ubicacion(Persona, Lugar)), usarDispositivos(Lugar,25,29,19,24,0,17,0).
 
 %regla para integrar dispositivos en un lugar
+%recordar usar la sintaxis de dispositivo apropiada
+%(idDispositivo, tipoDispositivo) 
+%tipoDispositivos implementados son:
+%controlTemp, iluminacion
 agregar_disp(Disp, Lugar):-
     lugar(Lugar,T,L),
     add_tail(L,Disp, Lista),
-    retract(lugar(Lugar,_,_)),
+    retractall(lugar(Lugar,_,_)),
     asserta(lugar(Lugar,T,Lista)).
 
 %regla para remover dispositivos de un lugar
