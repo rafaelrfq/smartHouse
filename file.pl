@@ -1,9 +1,0 @@
-shirt(a).
-shirt(b).
-shirt(c).
-shirt(d).
-shirt(e).
-shirt(f).
-shirt(g).
-shirt(h).
-shirt(i).
