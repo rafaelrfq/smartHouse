@@ -32,6 +32,12 @@ tipo(comedor).
 tipo(techo).
 tipo(entrada).
 
+%Tipo de dispositivos
+tipoDisp(iluminacion).
+tipoDisp(controlTemp).
+tipoDisp(seguridad).
+tipoDisp(other).
+
 % Fuentes de energia
 fuente(solar).
 fuente(eolica).
