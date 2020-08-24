@@ -62,7 +62,7 @@ insertar_consumo(Consumo, Dispositivo, Lugar, Resultado):-
     assertz(consumo(Consumo, Dispositivo)),
     verificar_consumo(Consumo, Dispositivo, Lugar, Resultado).
 
-verificar_consumo(regular, _, _):- write('Se mantiene el mismo estado en el dispositivo'), !.
+verificar_consumo(regular, _, _, Resultado):- Resultado = 'Se mantiene el mismo estado en el dispositivo', !.
 verificar_consumo(alto, Dispositivo, Lugar, Resultado):-
     retract(estado(Dispositivo, Lugar, _)), assertz(estado(Dispositivo, Lugar, 0)),
     Resultado = 'Se apago el dispositivo para eficientizar los recursos.'.
